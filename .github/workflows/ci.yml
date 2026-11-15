@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
-    branches: [main]
+    branches: [main, master]
 
 permissions:
   contents: read
@@ -23,8 +23,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install -e ".[test]"
-      - name: Run tests
-        run: python -m pytest tests/ -v --tb=short
+      - name: Run tests with coverage
+        run: python -m pytest tests/ -v --tb=short --cov=node1_governance_kernel --cov-fail-under=80
 
   lint:
     runs-on: ubuntu-latest
@@ -39,6 +39,20 @@ jobs:
         run: ruff check src/ tests/
       - name: Format check
         run: ruff format --check src/ tests/
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -e ".[test]" bandit pip-audit
+      - name: SAST scan
+        run: bandit -r src/ -ll -ii
+      - name: Dependency audit
+        run: pip-audit
 
   schema-validate:
     runs-on: ubuntu-latest
