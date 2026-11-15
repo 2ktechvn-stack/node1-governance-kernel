@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://node1.ai/schemas/evidence_manifest/v1",
+  "title": "Evidence Manifest",
+  "description": "12-field machine-verifiable record of a governance decision with hash-bound inputs and outputs.",
+  "type": "object",
+  "required": [
+    "manifest_id", "version", "call_id", "agent_uid", "tool_name",
+    "input_sha256", "output_sha256", "governance_commitment",
+    "admitted", "timestamp_start", "timestamp_end", "verdict"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string",
+      "description": "Unique manifest identifier"
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "call_id": {
+      "type": "string",
+      "description": "Correlates to the broker's tool-call tracking ID"
+    },
+    "agent_uid": {
+      "type": "integer",
+      "description": "Unix UID of the requesting agent process"
+    },
+    "tool_name": {
+      "type": "string",
+      "description": "Name of the tool/action executed"
+    },
+    "tool_args_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of canonical tool arguments"
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the full request payload"
+    },
+    "output_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the full response payload"
+    },
+    "governance_commitment": {
+      "type": "string",
+      "description": "Commitment token from the governance daemon"
+    },
+    "admitted": {
+      "type": "boolean",
+      "description": "Whether governance admitted this execution"
+    },
+    "timestamp_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timestamp_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "BLOCK", "REQUIRE_APPROVAL", "ERROR"],
+      "description": "Final governance verdict"
+    },
+    "risk_boundary_hit": {
+      "type": "string",
+      "description": "Which risk boundary category was triggered, if any"
+    },
+    "plan_baseline_id": {
+      "type": "string",
+      "description": "Plan baseline this execution belongs to, if any"
+    }
+  },
+  "additionalProperties": false
+}

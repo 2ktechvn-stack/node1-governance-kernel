@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://node1.ai/schemas/risk_boundary/v1",
+  "title": "Risk Boundary",
+  "description": "Safety fence defining actions that require human approval before an AI agent can proceed.",
+  "type": "object",
+  "required": ["boundary_id", "version", "categories", "enforcement_level"],
+  "properties": {
+    "boundary_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "trigger_patterns", "action"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["money", "secret", "legal", "go-live", "delete", "os-change"]
+          },
+          "trigger_patterns": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Glob or regex patterns that trigger this boundary"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["BLOCK", "REQUIRE_APPROVAL", "LOG_ONLY"],
+            "description": "BLOCK=hard stop, REQUIRE_APPROVAL=human must approve, LOG_ONLY=audit trail"
+          },
+          "exceptions": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Patterns exempted from this boundary (e.g. test directories)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "enforcement_level": {
+      "type": "string",
+      "enum": ["OS_HARD", "BROKER_SOFT", "ADVISORY"],
+      "description": "OS_HARD=syscall-level, BROKER_SOFT=broker checks, ADVISORY=log only"
+    },
+    "fallback_action": {
+      "type": "string",
+      "enum": ["BLOCK", "REQUIRE_APPROVAL"],
+      "default": "BLOCK",
+      "description": "Action when a tool call matches no category but is unknown"
+    }
+  },
+  "additionalProperties": false
+}

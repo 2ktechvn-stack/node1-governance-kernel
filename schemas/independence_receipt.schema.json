@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://node1.ai/schemas/independence_receipt/v1",
+  "title": "Independence Receipt",
+  "description": "Proof that a review came from a verified-independent reviewer.",
+  "type": "object",
+  "required": [
+    "receipt_id", "version", "artifact_sha256", "reviewer_id",
+    "reviewer_vendor", "independence_verdict", "review_verdict", "reviewed_at"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "artifact_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the exact bytes reviewed"
+    },
+    "artifact_path": {
+      "type": "string",
+      "description": "Path or identifier of the reviewed artifact"
+    },
+    "reviewer_id": {
+      "type": "string",
+      "description": "Opaque identifier for the reviewer instance"
+    },
+    "reviewer_vendor": {
+      "type": "string",
+      "description": "Vendor of the reviewer (e.g. anthropic, openai, google, xai)"
+    },
+    "author_vendor": {
+      "type": "string",
+      "description": "Vendor of the original author"
+    },
+    "independence_verdict": {
+      "type": "string",
+      "enum": ["VERIFIED", "PARTIAL", "UNVERIFIED"],
+      "description": "VERIFIED=different vendor from author, PARTIAL=same vendor different instance, UNVERIFIED=same instance or self-review"
+    },
+    "review_verdict": {
+      "type": "string",
+      "enum": ["PASS", "PASS_WITH_NOTES", "REVISE", "FAIL"],
+      "description": "The reviewer's verdict on the artifact"
+    },
+    "findings": {
+      "type": "object",
+      "properties": {
+        "p0_count": { "type": "integer", "minimum": 0 },
+        "p1_count": { "type": "integer", "minimum": 0 },
+        "p2_count": { "type": "integer", "minimum": 0 },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["severity", "summary"],
+            "properties": {
+              "severity": { "type": "string", "enum": ["P0", "P1", "P2"] },
+              "summary": { "type": "string" },
+              "location": { "type": "string" },
+              "suggested_fix": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "independence_note": {
+      "type": "string",
+      "description": "Free-text note about independence determination"
+    }
+  },
+  "additionalProperties": false
+}

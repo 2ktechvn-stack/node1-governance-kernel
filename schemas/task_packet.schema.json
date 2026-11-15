@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://node1.ai/schemas/task_packet/v1",
+  "title": "Task Packet",
+  "description": "Structured work unit with scope, risk classification, and acceptance criteria.",
+  "type": "object",
+  "required": ["packet_id", "version", "title", "scope", "risk_class", "acceptance_criteria", "created_at"],
+  "properties": {
+    "packet_id": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,6}-[A-Z0-9-]+$",
+      "description": "Unique identifier, e.g. PKT-REVIEW-20260101-AUTH"
+    },
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 200
+    },
+    "scope": {
+      "type": "object",
+      "required": ["files", "description"],
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Paths this task may touch"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10
+        },
+        "lanes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Governance lanes this task intersects"
+        }
+      },
+      "additionalProperties": false
+    },
+    "risk_class": {
+      "type": "string",
+      "enum": ["GREEN", "YELLOW", "RED"],
+      "description": "GREEN=no risk boundary touch, YELLOW=near boundary, RED=requires human approval"
+    },
+    "risk_triggers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["money", "secret", "legal", "go-live", "delete", "os-change"]
+      },
+      "description": "Which risk categories this task touches (empty for GREEN)"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Executor identity (agent name or human)"
+    },
+    "review_required": {
+      "type": "boolean",
+      "default": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
