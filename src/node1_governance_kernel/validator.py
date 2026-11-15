@@ -64,8 +64,12 @@ def main():
     if args.all_schemas:
         if len(args.all_schemas) == 1:
             schema_dir = Path(args.all_schemas[0])
+            schema_files = sorted(schema_dir.glob("*.schema.json"))
+            if not schema_files:
+                print(f"FAIL: no schema files found in {schema_dir}")
+                sys.exit(1)
             any_fail = False
-            for schema_path in sorted(schema_dir.glob("*.schema.json")):
+            for schema_path in schema_files:
                 try:
                     schema = load_json(str(schema_path))
                     Draft202012Validator.check_schema(schema)

@@ -8,6 +8,7 @@ signing provides integrity verification between trust principals.
 import hashlib
 import hmac
 import json
+import time
 
 MAX_FRAME = 65536
 
@@ -48,10 +49,14 @@ def recv_frame(sock) -> dict:
     A 5-second timeout prevents connection starvation from slow peers.
     """
     prev_timeout = sock.gettimeout()
-    sock.settimeout(RECV_TIMEOUT)
+    deadline = time.monotonic() + RECV_TIMEOUT
     data = bytearray()
     try:
         while True:
+            timeout_left = deadline - time.monotonic()
+            if timeout_left <= 0:
+                raise TimeoutError("frame reception timed out")
+            sock.settimeout(timeout_left)
             remaining = MAX_FRAME + 1 - len(data)
             chunk = sock.recv(min(4096, remaining))
             if not chunk:
