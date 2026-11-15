@@ -55,24 +55,37 @@ def validate_all_schemas(schema_dir: str, document_dir: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="Validate against node1-governance-kernel schemas")
-    parser.add_argument("--all-schemas", nargs=2, metavar=("SCHEMA_DIR", "DOC_DIR"),
-                        help="Validate all documents in DOC_DIR against matching schemas in SCHEMA_DIR")
+    parser.add_argument("--all-schemas", nargs="+", metavar="DIR",
+                        help="With one DIR: check all schemas compile. With two DIRs: validate docs in DIR2 against schemas in DIR1.")
     parser.add_argument("schema", nargs="?", help="Path to JSON Schema file")
     parser.add_argument("document", nargs="?", help="Path to JSON document to validate")
     args = parser.parse_args()
 
     if args.all_schemas:
-        results = validate_all_schemas(args.all_schemas[0], args.all_schemas[1])
-        any_fail = False
-        for pair, errors in results.items():
-            if errors:
-                any_fail = True
-                print(f"FAIL: {pair} — {len(errors)} error(s):")
-                for err in errors:
-                    print(err)
-            else:
-                print(f"PASS: {pair}")
-        sys.exit(1 if any_fail else 0)
+        if len(args.all_schemas) == 1:
+            schema_dir = Path(args.all_schemas[0])
+            any_fail = False
+            for schema_path in sorted(schema_dir.glob("*.schema.json")):
+                try:
+                    schema = load_json(str(schema_path))
+                    Draft202012Validator.check_schema(schema)
+                    print(f"PASS: {schema_path.name}")
+                except Exception as e:
+                    any_fail = True
+                    print(f"FAIL: {schema_path.name} — {e}")
+            sys.exit(1 if any_fail else 0)
+        else:
+            results = validate_all_schemas(args.all_schemas[0], args.all_schemas[1])
+            any_fail = False
+            for pair, errors in results.items():
+                if errors:
+                    any_fail = True
+                    print(f"FAIL: {pair} — {len(errors)} error(s):")
+                    for err in errors:
+                        print(err)
+                else:
+                    print(f"PASS: {pair}")
+            sys.exit(1 if any_fail else 0)
 
     if not args.schema or not args.document:
         parser.error("schema and document are required (or use --all-schemas)")

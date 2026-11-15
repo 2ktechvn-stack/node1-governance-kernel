@@ -64,4 +64,4 @@ jobs:
       - name: Install dependencies
         run: pip install -e ".[validator]"
       - name: Validate all schemas
-        run: node1-validate --all-schemas
+        run: node1-validate --all-schemas schemas/

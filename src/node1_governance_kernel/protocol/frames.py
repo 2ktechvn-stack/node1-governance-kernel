@@ -37,32 +37,35 @@ def send_frame(sock, value: dict) -> None:
     sock.sendall(payload)
 
 
+RECV_TIMEOUT = 5.0
+
+
 def recv_frame(sock) -> dict:
     """Receive a single JSON frame from a socket.
 
     Enforces one-frame-per-connection-turn: after parsing the first
-    newline-terminated object, shuts down the read side so any
-    pipelined data is discarded and the peer gets an error.
+    newline-terminated object, any pipelined data raises ValueError.
+    A 5-second timeout prevents connection starvation from slow peers.
     """
+    prev_timeout = sock.gettimeout()
+    sock.settimeout(RECV_TIMEOUT)
     data = bytearray()
-    while True:
-        remaining = MAX_FRAME + 1 - len(data)
-        chunk = sock.recv(min(4096, remaining))
-        if not chunk:
-            raise EOFError("peer closed")
-        data.extend(chunk)
-        if len(data) > MAX_FRAME:
-            raise ValueError("frame too large")
-        if b"\n" in data:
-            line, rest = bytes(data).split(b"\n", 1)
-            if rest:
-                raise ValueError("multiple/pipelined frames forbidden")
-            value = json.loads(line.decode("utf-8"))
-            if not isinstance(value, dict):
-                raise ValueError("object required")
-            try:
-                import socket as _socket
-                sock.shutdown(_socket.SHUT_RD)
-            except OSError:
-                pass
-            return value
+    try:
+        while True:
+            remaining = MAX_FRAME + 1 - len(data)
+            chunk = sock.recv(min(4096, remaining))
+            if not chunk:
+                raise EOFError("peer closed")
+            data.extend(chunk)
+            if len(data) > MAX_FRAME:
+                raise ValueError("frame too large")
+            if b"\n" in data:
+                line, rest = bytes(data).split(b"\n", 1)
+                if rest:
+                    raise ValueError("multiple/pipelined frames forbidden")
+                value = json.loads(line.decode("utf-8"))
+                if not isinstance(value, dict):
+                    raise ValueError("object required")
+                return value
+    finally:
+        sock.settimeout(prev_timeout)
