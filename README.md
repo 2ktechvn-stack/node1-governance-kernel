@@ -1,8 +1,19 @@
-# node1-governance-kernel
+<p align="center">
+  <img src="docs/node1-logo.svg" alt="Node1 AI — Governance Kernel" width="400">
+</p>
 
-**Governance runtime for AI agent fleets** — privilege separation, tool allowlisting, and audit evidence that run at the OS level, not inside the AI's own context.
+<h1 align="center">node1-governance-kernel</h1>
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+<p align="center">
+  <strong>Governance runtime for AI agent fleets</strong><br>
+  Privilege separation, tool allowlisting, and audit evidence that run at the OS level — not inside the AI's own context.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License"></a>
+  <a href="https://pypi.org/project/node1-governance-kernel/"><img src="https://img.shields.io/pypi/v/node1-governance-kernel.svg" alt="PyPI"></a>
+  <a href="https://pypi.org/project/node1-governance-kernel/"><img src="https://img.shields.io/pypi/pyversions/node1-governance-kernel.svg" alt="Python"></a>
+</p>
 
 ## Problem
 
@@ -110,7 +121,7 @@ See [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) for the full threat model.
 
 - [x] M1: Privilege separation foundation (evidence daemon, governance daemon)
 - [x] M2: Sandbox + tool allowlist (broker, AppArmor, path jail)
-- [ ] M3: Open source launch (this repo — schemas, protocol, conformance tests)
+- [x] M3: Open source launch (this repo — schemas, protocol, conformance tests)
 - [ ] M4: Control Plane (dashboard, SSO, compliance mapping) — commercial
 
 ## Contributing
@@ -131,4 +142,7 @@ Apache License 2.0 — see [LICENSE](LICENSE).
 
 ---
 
-Built by [Node1 AI](https://node1.ai) — governance runtime for AI agent fleets.
+<p align="center">
+  Built by <a href="https://node1.ai"><strong>Node1 AI</strong></a> (Vietnam)<br>
+  <sub>Governance runtime for AI agent fleets · Apache 2.0</sub>
+</p>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" role="img" aria-labelledby="n1t n1d">
+  <title id="n1t">Node1 AI</title>
+  <desc id="n1d">Node1 AI — Governance Runtime for AI Agent Fleets</desc>
+  <rect width="400" height="80" rx="8" fill="#0A2026"/>
+  <g transform="translate(16,8) scale(0.27)" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round">
+    <polygon points="200,50.717968 180,85.358984 140,85.358984 120,50.717968 140,16.076952 180,16.076952"/>
+    <polygon points="260,85.358984 240,120 200,120 180,85.358984 200,50.717968 240,50.717968"/>
+    <polygon points="260,154.641016 240,189.282032 200,189.282032 180,154.641016 200,120 240,120"/>
+    <polygon points="200,189.282032 180,223.923048 140,223.923048 120,189.282032 140,154.641016 180,154.641016"/>
+    <polygon points="140,154.641016 120,189.282032 80,189.282032 60,154.641016 80,120 120,120"/>
+  </g>
+  <g transform="translate(16,8) scale(0.27)">
+    <polygon points="200,120 180,154.641016 140,154.641016 120,120 140,85.358984 180,85.358984" fill="#FFFFFF"/>
+    <circle cx="160" cy="120" r="10" fill="#EC7A5E"/>
+  </g>
+  <text x="110" y="38" font-family="system-ui,sans-serif" font-weight="800" font-size="13" fill="#EC7A5E" letter-spacing="2">NODE1 AI</text>
+  <text x="110" y="58" font-family="system-ui,sans-serif" font-weight="600" font-size="16" fill="#FFFFFF">Governance Kernel</text>
+  <rect x="110" y="64" width="180" height="3" rx="1.5" fill="#C84F35"/>
+</svg>
