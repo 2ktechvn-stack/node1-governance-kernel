@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/node1-logo.svg" alt="Node1 AI — Governance Kernel" width="400">
+  <img src="docs/node1-logo.png" alt="Node1 AI — Governance Kernel" width="400">
 </p>
 
 <h1 align="center">node1-governance-kernel</h1>
